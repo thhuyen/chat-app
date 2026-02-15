@@ -1,4 +1,5 @@
 import styled from "styled-components";
+import { Switch } from "antd";
 import {
   DatabaseOutlined,
   WifiOutlined,
@@ -121,27 +122,9 @@ const StorageTotal = styled.div`
   font-weight: 500;
 `;
 
-const Toggle = styled.button<{ $on?: boolean }>`
-  width: 44px;
-  height: 24px;
-  border-radius: 12px;
-  border: none;
-  background: ${(p) => (p.$on ? "var(--wa-green)" : "var(--text-muted)")};
-  position: relative;
-  cursor: pointer;
-  transition: background 0.2s ease;
-  flex-shrink: 0;
-
-  &::after {
-    content: "";
-    position: absolute;
-    top: 2px;
-    left: ${(p) => (p.$on ? "22px" : "2px")};
-    width: 20px;
-    height: 20px;
-    border-radius: 50%;
-    background: white;
-    transition: left 0.2s ease;
+const StyledSwitch = styled(Switch)`
+  &&.ant-switch-checked {
+    background: var(--wa-green);
   }
 `;
 
@@ -198,7 +181,7 @@ export default function SettingsStorage() {
           <RowLabel>Photos</RowLabel>
           <RowDesc>Automatically download photos</RowDesc>
         </RowContent>
-        <Toggle $on />
+        <StyledSwitch defaultChecked />
       </Row>
 
       <Row>
@@ -207,7 +190,7 @@ export default function SettingsStorage() {
           <RowLabel>Audio</RowLabel>
           <RowDesc>Automatically download audio</RowDesc>
         </RowContent>
-        <Toggle $on />
+        <StyledSwitch defaultChecked />
       </Row>
 
       <Row>
@@ -216,7 +199,7 @@ export default function SettingsStorage() {
           <RowLabel>Video</RowLabel>
           <RowDesc>Automatically download videos</RowDesc>
         </RowContent>
-        <Toggle />
+        <StyledSwitch />
       </Row>
 
       <Row>
@@ -225,7 +208,7 @@ export default function SettingsStorage() {
           <RowLabel>Documents</RowLabel>
           <RowDesc>Automatically download documents</RowDesc>
         </RowContent>
-        <Toggle $on />
+        <StyledSwitch defaultChecked />
       </Row>
     </Container>
   );

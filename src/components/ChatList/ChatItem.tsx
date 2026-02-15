@@ -1,6 +1,7 @@
 import styled from "styled-components";
-import type {Contact} from "../../data/mockData";
+import type { Contact } from "../../data/mockData";
 import { StarFilled, StopOutlined } from "@ant-design/icons";
+import { Avatar as AntAvatar, Badge as AntBadge } from "antd";
 
 const ItemContainer = styled.div<{ $active?: boolean }>`
   display: flex;
@@ -37,11 +38,10 @@ const AvatarWrapper = styled.div<{ $online?: boolean }>`
   }
 `;
 
-const Avatar = styled.img`
-  width: 100%;
-  height: 100%;
+const StyledAvatar = styled(AntAvatar)`
+  width: 100% !important;
+  height: 100% !important;
   border-radius: var(--radius-full);
-  object-fit: cover;
 `;
 
 const Content = styled.div`
@@ -108,31 +108,33 @@ const Indicators = styled.div`
   margin-left: 4px;
 `;
 
-const UnreadBadge = styled.span`
-  min-width: var(--badge-size);
-  height: var(--badge-size);
-  background: var(--badge-bg);
-  color: var(--badge-text);
-  font-size: 11px;
-  font-weight: 700;
-  border-radius: var(--radius-full);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 0 5px;
+const StyledUnreadBadge = styled(AntBadge)`
+  .ant-badge-count {
+    min-width: var(--badge-size);
+    height: var(--badge-size);
+    background: var(--badge-bg);
+    color: var(--badge-text);
+    font-size: 11px;
+    font-weight: 700;
+    border-radius: var(--radius-full);
+    box-shadow: none;
+    padding: 0 5px;
+    line-height: var(--badge-size);
+  }
 `;
 
-const MentionBadge = styled.span`
-  width: 20px;
-  height: 20px;
-  background: var(--badge-bg);
-  color: var(--badge-text);
-  font-size: 11px;
-  font-weight: 700;
-  border-radius: var(--radius-full);
-  display: flex;
-  align-items: center;
-  justify-content: center;
+const StyledMentionBadge = styled(AntBadge)`
+  .ant-badge-count {
+    width: 20px;
+    height: 20px;
+    background: var(--badge-bg);
+    color: var(--badge-text);
+    font-size: 11px;
+    font-weight: 700;
+    border-radius: var(--radius-full);
+    box-shadow: none;
+    line-height: 20px;
+  }
 `;
 
 const PinIcon = styled.span`
@@ -160,7 +162,7 @@ export default function ChatItem({ contact, active, onClick }: ChatItemProps) {
   return (
     <ItemContainer $active={active} onClick={onClick}>
       <AvatarWrapper $online={contact.online}>
-        <Avatar src={contact.avatar} alt={contact.name} />
+        <StyledAvatar src={contact.avatar} alt={contact.name} />
       </AvatarWrapper>
       <Content>
         <TopRow>
@@ -178,8 +180,8 @@ export default function ChatItem({ contact, active, onClick }: ChatItemProps) {
             {contact.lastMessage}
           </LastMessage>
           <Indicators>
-            {contact.hasMention && <MentionBadge>@</MentionBadge>}
-            {hasUnread && <UnreadBadge>{contact.unreadCount}</UnreadBadge>}
+            {contact.hasMention && <StyledMentionBadge count="@" />}
+            {hasUnread && <StyledUnreadBadge count={contact.unreadCount} />}
             {contact.isPinned && <PinIcon><StarFilled /></PinIcon>}
           </Indicators>
         </BottomRow>

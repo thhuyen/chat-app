@@ -5,6 +5,7 @@ import type { RootState } from "../../store";
 import { selectChat, setSearchQuery } from "../../store/chatSlice";
 import ChatItem from "./ChatItem";
 import { EditOutlined, FilterOutlined, SearchOutlined, LockOutlined } from "@ant-design/icons";
+import { Input } from "antd";
 
 const PanelContainer = styled.div`
   width: var(--chat-list-width);
@@ -60,39 +61,36 @@ const SearchContainer = styled.div`
   padding: 6px 14px 8px;
 `;
 
-const SearchWrapper = styled.div`
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  background: var(--bg-search);
-  border-radius: var(--radius-sm);
-  padding: 0 12px;
-  height: 36px;
-  transition: box-shadow var(--transition-fast);
+const StyledSearch = styled(Input)`
+  && {
+    background: var(--bg-search);
+    border: none;
+    border-radius: var(--radius-sm);
+    height: 36px;
+    font-size: var(--font-size-sm);
+    color: var(--text-primary);
+    padding: 0 12px;
 
-  &:focus-within {
-    box-shadow: 0 0 0 2px rgba(37, 211, 102, 0.2);
-  }
-`;
+    &:focus, &:hover, &.ant-input-focused {
+      border-color: transparent;
+      box-shadow: 0 0 0 2px rgba(37, 211, 102, 0.2);
+    }
 
-const SearchIcon = styled.span`
-  color: var(--text-muted);
-  font-size: 14px;
-  display: flex;
-  align-items: center;
-`;
+    .ant-input-prefix {
+      color: var(--text-muted);
+      font-size: 14px;
+      margin-inline-end: 10px;
+    }
 
-const SearchInput = styled.input`
-  flex: 1;
-  border: none;
-  outline: none;
-  background: transparent;
-  font-size: var(--font-size-sm);
-  color: var(--text-primary);
-  font-family: var(--font-family);
+    input {
+      background: transparent;
+      color: var(--text-primary);
+      font-family: var(--font-family);
 
-  &::placeholder {
-    color: var(--text-muted);
+      &::placeholder {
+        color: var(--text-muted);
+      }
+    }
   }
 `;
 
@@ -171,16 +169,13 @@ export default function ChatListPanel() {
         </HeaderActions>
       </Header>
       <SearchContainer>
-        <SearchWrapper>
-          <SearchIcon>
-            <SearchOutlined />
-          </SearchIcon>
-          <SearchInput
-            placeholder="Search"
-            value={searchQuery}
-            onChange={(e) => dispatch(setSearchQuery(e.target.value))}
-          />
-        </SearchWrapper>
+        <StyledSearch
+          prefix={<SearchOutlined />}
+          placeholder="Search"
+          value={searchQuery}
+          onChange={(e) => dispatch(setSearchQuery(e.target.value))}
+          allowClear
+        />
       </SearchContainer>
       <FilterChips>
         <Chip $active={activeFilter === "all"} onClick={() => setActiveFilter("all")}>All</Chip>

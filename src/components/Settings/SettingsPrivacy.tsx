@@ -1,4 +1,5 @@
 import styled from "styled-components";
+import { Switch } from "antd";
 import {
   EyeOutlined,
   UserOutlined,
@@ -77,27 +78,9 @@ const Divider = styled.div`
   background: var(--border-light);
 `;
 
-const Toggle = styled.button<{ $on?: boolean }>`
-  width: 44px;
-  height: 24px;
-  border-radius: 12px;
-  border: none;
-  background: ${(p) => (p.$on ? "var(--wa-green)" : "var(--text-muted)")};
-  position: relative;
-  cursor: pointer;
-  transition: background 0.2s ease;
-  flex-shrink: 0;
-
-  &::after {
-    content: "";
-    position: absolute;
-    top: 2px;
-    left: ${(p) => (p.$on ? "22px" : "2px")};
-    width: 20px;
-    height: 20px;
-    border-radius: 50%;
-    background: white;
-    transition: left 0.2s ease;
+const StyledSwitch = styled(Switch)`
+  &&.ant-switch-checked {
+    background: var(--wa-green);
   }
 `;
 
@@ -142,7 +125,7 @@ export default function SettingsPrivacy() {
           <RowLabel>Read receipts</RowLabel>
           <RowDesc>If turned off, you won't send or receive read receipts</RowDesc>
         </RowContent>
-        <Toggle $on />
+        <StyledSwitch defaultChecked />
       </Row>
 
       <Divider />
@@ -175,7 +158,7 @@ export default function SettingsPrivacy() {
           <RowLabel>App Lock</RowLabel>
           <RowDesc>Require Touch ID to unlock WhatsApp</RowDesc>
         </RowContent>
-        <Toggle />
+        <StyledSwitch />
       </Row>
     </Container>
   );

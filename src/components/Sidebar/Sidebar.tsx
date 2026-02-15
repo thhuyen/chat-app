@@ -12,6 +12,7 @@ import {
   BulbOutlined,
   BulbFilled,
 } from "@ant-design/icons";
+import { Tooltip, Badge as AntBadge } from "antd";
 
 const SidebarContainer = styled.aside`
   width: var(--sidebar-width);
@@ -55,21 +56,17 @@ const NavButton = styled.button<{ $active?: boolean }>`
   }
 `;
 
-const Badge = styled.span`
-  position: absolute;
-  top: 4px;
-  right: 4px;
-  width: 18px;
-  height: 18px;
-  background: var(--badge-bg);
-  color: var(--badge-text);
-  font-size: 10px;
-  font-weight: 700;
-  border-radius: var(--radius-full);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  line-height: 1;
+const StyledBadge = styled(AntBadge)`
+  .ant-badge-count {
+    background: var(--badge-bg);
+    color: var(--badge-text);
+    font-size: 10px;
+    font-weight: 700;
+    min-width: 18px;
+    height: 18px;
+    line-height: 18px;
+    box-shadow: none;
+  }
 `;
 
 const MissedCallDot = styled.span`
@@ -114,28 +111,30 @@ export default function Sidebar() {
     <SidebarContainer>
       <NavGroup>
         {navItems.map((item) => (
-          <NavButton
-            key={item.id}
-            $active={activeTab === item.id}
-            onClick={() => dispatch(setActiveTab(item.id))}
-            title={item.id.charAt(0).toUpperCase() + item.id.slice(1)}
-          >
-            {item.icon}
-            {item.badge ? <Badge>{item.badge}</Badge> : null}
-            {item.hasMissedCall && !item.badge ? <MissedCallDot /> : null}
-          </NavButton>
+          <Tooltip key={item.id} title={item.id.charAt(0).toUpperCase() + item.id.slice(1)} placement="right">
+            <NavButton
+              $active={activeTab === item.id}
+              onClick={() => dispatch(setActiveTab(item.id))}
+            >
+              <StyledBadge count={item.badge || 0} size="small" offset={[2, -2]}>
+                {item.icon}
+              </StyledBadge>
+              {item.hasMissedCall && !item.badge ? <MissedCallDot /> : null}
+            </NavButton>
+          </Tooltip>
         ))}
       </NavGroup>
       <BottomNav>
-        <NavButton
-          onClick={() => dispatch(toggleTheme())}
-          title={theme === "light" ? "Switch to dark mode" : "Switch to light mode"}
-        >
-          {theme === "light" ? <BulbOutlined /> : <BulbFilled />}
-        </NavButton>
-        <NavButton title="Settings" onClick={() => dispatch(setSettingsPage("profile"))}>
-          <SettingOutlined />
-        </NavButton>
+        <Tooltip title={theme === "light" ? "Switch to dark mode" : "Switch to light mode"} placement="right">
+          <NavButton onClick={() => dispatch(toggleTheme())}>
+            {theme === "light" ? <BulbOutlined /> : <BulbFilled />}
+          </NavButton>
+        </Tooltip>
+        <Tooltip title="Settings" placement="right">
+          <NavButton onClick={() => dispatch(setSettingsPage("profile"))}>
+            <SettingOutlined />
+          </NavButton>
+        </Tooltip>
       </BottomNav>
     </SidebarContainer>
   );

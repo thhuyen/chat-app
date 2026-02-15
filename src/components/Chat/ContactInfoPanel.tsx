@@ -18,6 +18,7 @@ import {
   LinkOutlined,
   FileOutlined,
 } from "@ant-design/icons";
+import { Avatar as AntAvatar } from "antd";
 
 const Panel = styled.aside`
   width: 340px;
@@ -83,12 +84,14 @@ const ProfileSection = styled.div`
   gap: 6px;
 `;
 
-const Avatar = styled.img`
-  width: 200px;
-  height: 200px;
-  border-radius: 50%;
-  object-fit: cover;
-  margin-bottom: 12px;
+const StyledAvatar = styled(AntAvatar)`
+  && {
+    width: 200px;
+    height: 200px;
+    border-radius: 50%;
+    margin-bottom: 12px;
+    font-size: 72px;
+  }
 `;
 
 const ContactName = styled.div`
@@ -259,7 +262,7 @@ export default function ContactInfoPanel() {
       </PanelHeader>
 
       <ProfileSection>
-        <Avatar src={contact.avatar} alt={contact.name} />
+        <StyledAvatar src={contact.avatar} alt={contact.name} />
         <ContactName>{contact.name}</ContactName>
         <ContactPhone>{contact.phone || "No phone number"}</ContactPhone>
         <ActionButtons>
