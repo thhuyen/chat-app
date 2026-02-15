@@ -5,6 +5,8 @@ import Sidebar from "./Sidebar/Sidebar";
 import ChatListPanel from "./ChatList/ChatListPanel";
 import ChatView from "./Chat/ChatView";
 import WelcomeView from "./Chat/WelcomeView";
+import ContactInfoPanel from "./Chat/ContactInfoPanel";
+import SettingsLayout from "./Settings/SettingsLayout";
 
 const AppWrapper = styled.div`
   width: 100%;
@@ -36,18 +38,24 @@ const MainContent = styled.div`
 `;
 
 export default function AppLayout() {
-  const selectedChatId = useSelector((s: RootState) => s.chat.selectedChatId);
+  const { selectedChatId, showContactInfo, activeTab } = useSelector((s: RootState) => s.chat);
 
   return (
     <AppWrapper>
       <LayoutContainer>
         <Sidebar />
-        <ChatListPanel />
-        <MainContent>
-          {selectedChatId ? <ChatView /> : <WelcomeView />}
-        </MainContent>
+        {activeTab === "settings" ? (
+          <SettingsLayout />
+        ) : (
+          <>
+            <ChatListPanel />
+            <MainContent>
+              {selectedChatId ? <ChatView /> : <WelcomeView />}
+            </MainContent>
+            {selectedChatId && showContactInfo && <ContactInfoPanel />}
+          </>
+        )}
       </LayoutContainer>
     </AppWrapper>
   );
 }
-

@@ -1,7 +1,9 @@
 import { createSlice, type PayloadAction } from "@reduxjs/toolkit";
 import { contacts, type Contact, type Message } from "../data/mockData";
 
-export type SidebarTab = "chats" | "calls" | "status" | "archived" | "starred";
+export type SidebarTab = "chats" | "calls" | "status" | "archived" | "starred" | "settings";
+
+export type SettingsPage = "profile" | "account" | "privacy" | "chats" | "notifications" | "storage" | null;
 
 interface ChatState {
   activeTab: SidebarTab;
@@ -10,6 +12,8 @@ interface ChatState {
   contacts: Contact[];
   theme: "light" | "dark";
   replyToMessageId: string | null;
+  showContactInfo: boolean;
+  settingsPage: SettingsPage;
 }
 
 const initialState: ChatState = {
@@ -19,6 +23,8 @@ const initialState: ChatState = {
   contacts,
   theme: "light",
   replyToMessageId: null,
+  showContactInfo: false,
+  settingsPage: null,
 };
 
 const chatSlice = createSlice({
@@ -27,9 +33,13 @@ const chatSlice = createSlice({
   reducers: {
     setActiveTab(state, action: PayloadAction<SidebarTab>) {
       state.activeTab = action.payload;
+      if (action.payload !== "settings") {
+        state.settingsPage = null;
+      }
     },
     selectChat(state, action: PayloadAction<string>) {
       state.selectedChatId = action.payload;
+      state.showContactInfo = false;
       // Mark messages as read when selecting a chat
       const contact = state.contacts.find((c) => c.id === action.payload);
       if (contact) {
@@ -75,8 +85,27 @@ const chatSlice = createSlice({
     clearReplyTo(state) {
       state.replyToMessageId = null;
     },
+    toggleContactInfo(state) {
+      state.showContactInfo = !state.showContactInfo;
+    },
+    setSettingsPage(state, action: PayloadAction<SettingsPage>) {
+      state.settingsPage = action.payload;
+      if (action.payload) {
+        state.activeTab = "settings";
+      }
+    },
   },
 });
 
-export const { setActiveTab, selectChat, setSearchQuery, sendMessage, toggleTheme, setReplyTo, clearReplyTo } = chatSlice.actions;
+export const {
+  setActiveTab,
+  selectChat,
+  setSearchQuery,
+  sendMessage,
+  toggleTheme,
+  setReplyTo,
+  clearReplyTo,
+  toggleContactInfo,
+  setSettingsPage,
+} = chatSlice.actions;
 export default chatSlice.reducer;

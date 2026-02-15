@@ -1,9 +1,32 @@
+export type MessageType = "text" | "deleted" | "system" | "poll" | "link";
+
+export interface PollOption {
+  text: string;
+  votes: number;
+  voted: boolean;
+}
+
+export interface PollData {
+  question: string;
+  options: PollOption[];
+}
+
+export interface LinkData {
+  url: string;
+  title: string;
+  description: string;
+  domain: string;
+}
+
 export interface Message {
   id: string;
   text: string;
   timestamp: string;
   sent: boolean;
   read?: boolean;
+  type?: MessageType;
+  poll?: PollData;
+  link?: LinkData;
 }
 
 export interface Contact {
@@ -21,6 +44,8 @@ export interface Contact {
   lastMessageRead: boolean;
   isDeleted: boolean;
   online: boolean;
+  phone?: string;
+  about?: string;
   messages: Message[];
 }
 
@@ -65,6 +90,8 @@ export const contacts: Contact[] = [
     lastMessageRead: true,
     isDeleted: false,
     online: true,
+    phone: "+1 (555) 123-4567",
+    about: "Living my best life ✨",
     messages: [
       { id: "1a", text: "Hey baby, how's your day going? 💕", timestamp: "14:20", sent: false, read: true },
       { id: "1b", text: "It's been great! Just finished lunch. What about you?", timestamp: "14:25", sent: true, read: true },
@@ -92,6 +119,8 @@ export const contacts: Contact[] = [
     lastMessageRead: false,
     isDeleted: false,
     online: true,
+    phone: "+1 (555) 234-5678",
+    about: "Proud mom 💕",
     messages: [
       { id: "2a", text: "Hi sweetie, how was school today?", timestamp: "17:00", sent: false, read: true },
       { id: "2b", text: "It was okay mom, thanks for asking", timestamp: "17:15", sent: true, read: true },
@@ -117,6 +146,8 @@ export const contacts: Contact[] = [
     lastMessageRead: true,
     isDeleted: false,
     online: false,
+    phone: "+1 (555) 345-6789",
+    about: "Sports fan 🏈",
     messages: [
       { id: "3a", text: "Son, did you see the game last night?", timestamp: "18:00", sent: false, read: true },
       { id: "3b", text: "No, I missed it! What happened?", timestamp: "18:10", sent: true, read: true },
@@ -140,6 +171,8 @@ export const contacts: Contact[] = [
     lastMessageRead: true,
     isDeleted: false,
     online: false,
+    phone: "+1 (555) 456-7890",
+    about: "Make like a tree and leave",
     messages: [
       { id: "4a", text: "Hey McFly!", timestamp: "17:00", sent: false, read: true },
       { id: "4b", text: "What do you want, Biff?", timestamp: "17:05", sent: true, read: true },
@@ -163,10 +196,27 @@ export const contacts: Contact[] = [
     lastMessageRead: true,
     isDeleted: false,
     online: false,
+    phone: "+1 (555) 567-8901",
+    about: "Save the clock tower! 🕐",
     messages: [
       { id: "5a", text: "Excuse me, young man!", timestamp: "15:30", sent: false, read: true },
       { id: "5b", text: "Yes?", timestamp: "15:35", sent: true, read: true },
-      { id: "5c", text: "Would you like to contribute to the preservation of the clock tower?", timestamp: "15:40", sent: false, read: true },
+      {
+        id: "5poll",
+        text: "",
+        timestamp: "15:40",
+        sent: false,
+        read: true,
+        type: "poll",
+        poll: {
+          question: "Save the clock tower?",
+          options: [
+            { text: "Yes", votes: 42, voted: true },
+            { text: "No", votes: 3, voted: false },
+          ],
+        },
+      },
+      { id: "5c", text: "Would you like to contribute to the preservation of the clock tower?", timestamp: "15:45", sent: false, read: true },
       { id: "5d", text: "Oh, I don't think I have any cash on me...", timestamp: "16:00", sent: true, read: true },
       { id: "5e", text: "Save the clock tower?", timestamp: "16:15", sent: false, read: true },
     ],
@@ -186,17 +236,21 @@ export const contacts: Contact[] = [
     lastMessageRead: false,
     isDeleted: true,
     online: false,
+    phone: "+1 (555) 678-9012",
+    about: "No slackers!",
     messages: [
+      { id: "6sys", text: "Disappearing messages were turned on", timestamp: "07:55", sent: false, read: true, type: "system" },
       { id: "6a", text: "McFly, you're late again!", timestamp: "08:00", sent: false, read: true },
       { id: "6b", text: "Sorry Mr. Strickland, it won't happen again", timestamp: "08:10", sent: true, read: true },
       { id: "6c", text: "That's what you said last time, slacker!", timestamp: "08:15", sent: false, read: true },
       { id: "6d", text: "I'm not a slacker!", timestamp: "08:30", sent: true, read: true },
+      { id: "6del", text: "This message was deleted", timestamp: "08:40", sent: true, read: true, type: "deleted" },
       { id: "6e", text: "Your father was a slacker too!", timestamp: "08:45", sent: false, read: true },
     ],
   },
   {
     id: "7",
-    name: "Doc Brown 🔬",
+    name: "Emmett \"Doc\" Brown",
     avatar: generateAvatarSvg("Doc Brown", 6),
     lastMessage: "Great Scott! The flux capacitor!",
     lastMessageTime: "Yesterday",
@@ -209,12 +263,78 @@ export const contacts: Contact[] = [
     lastMessageRead: false,
     isDeleted: false,
     online: true,
+    phone: "+1 (555) 789-0123",
+    about: "1.21 Gigawatts!",
     messages: [
       { id: "7a", text: "Marty! You've got to come back with me!", timestamp: "22:00", sent: false, read: true },
       { id: "7b", text: "Where are we going, Doc?", timestamp: "22:05", sent: true, read: true },
+      {
+        id: "7link",
+        text: "",
+        timestamp: "22:08",
+        sent: false,
+        read: true,
+        type: "link",
+        link: {
+          url: "https://open.spotify.com/track/example",
+          title: "Back In Time - Huey Lewis & The News",
+          description: "Listen on Spotify · Song · 1985",
+          domain: "open.spotify.com",
+        },
+      },
       { id: "7c", text: "Back to the future!", timestamp: "22:10", sent: false, read: true },
       { id: "7d", text: "Wait, what? Is everything okay?", timestamp: "22:15", sent: true, read: true },
       { id: "7e", text: "Great Scott! The flux capacitor!", timestamp: "22:20", sent: false },
+    ],
+  },
+  {
+    id: "8",
+    name: "Dave",
+    avatar: generateAvatarSvg("Dave", 0),
+    lastMessage: "Thanks bro!",
+    lastMessageTime: "08:01",
+    unreadCount: 0,
+    isPinned: false,
+    isMuted: false,
+    hasMention: false,
+    isTyping: false,
+    lastMessageSent: false,
+    lastMessageRead: true,
+    isDeleted: false,
+    online: false,
+    phone: "+1 (555) 890-1234",
+    about: "Hey there! I am using WhatsApp",
+    messages: [
+      { id: "8a", text: "Hey bro, can you pick me up?", timestamp: "07:30", sent: false, read: true },
+      { id: "8b", text: "Sure, where are you?", timestamp: "07:35", sent: true, read: true },
+      { id: "8c", text: "At the mall. Near the entrance", timestamp: "07:40", sent: false, read: true },
+      { id: "8d", text: "On my way!", timestamp: "07:45", sent: true, read: true },
+      { id: "8e", text: "Thanks bro!", timestamp: "08:01", sent: false, read: true },
+    ],
+  },
+  {
+    id: "9",
+    name: "Lynda",
+    avatar: generateAvatarSvg("Lynda", 1),
+    lastMessage: "See you tomorrow!",
+    lastMessageTime: "Yesterday",
+    unreadCount: 0,
+    isPinned: false,
+    isMuted: false,
+    hasMention: false,
+    isTyping: false,
+    lastMessageSent: true,
+    lastMessageRead: true,
+    isDeleted: false,
+    online: false,
+    phone: "+1 (555) 901-2345",
+    about: "Busy",
+    messages: [
+      { id: "9a", text: "Hey Lynda!", timestamp: "18:00", sent: true, read: true },
+      { id: "9b", text: "Hi! What's up?", timestamp: "18:10", sent: false, read: true },
+      { id: "9c", text: "Want to grab coffee tomorrow?", timestamp: "18:15", sent: true, read: true },
+      { id: "9d", text: "Sure! What time?", timestamp: "18:20", sent: false, read: true },
+      { id: "9e", text: "See you tomorrow!", timestamp: "18:30", sent: true, read: true },
     ],
   },
 ];

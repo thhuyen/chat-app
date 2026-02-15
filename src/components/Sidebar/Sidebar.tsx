@@ -1,7 +1,7 @@
 import { useSelector, useDispatch } from "react-redux";
 import styled from "styled-components";
 import type { RootState } from "../../store";
-import { setActiveTab, toggleTheme, type SidebarTab } from "../../store/chatSlice";
+import { setActiveTab, toggleTheme, setSettingsPage, type SidebarTab } from "../../store/chatSlice";
 import {
   MessageOutlined,
   PhoneOutlined,
@@ -133,7 +133,7 @@ export default function Sidebar() {
         >
           {theme === "light" ? <BulbOutlined /> : <BulbFilled />}
         </NavButton>
-        <NavButton title="Settings">
+        <NavButton title="Settings" onClick={() => dispatch(setSettingsPage("profile"))}>
           <SettingOutlined />
         </NavButton>
       </BottomNav>
