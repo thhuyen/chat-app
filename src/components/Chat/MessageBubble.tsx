@@ -4,10 +4,11 @@ import type { MessageType } from "../../data/mockData";
 
 const Wrapper = styled.div<{ $sent: boolean }>`
   display: flex;
-  flex-direction: column;
-  align-items: ${(p) => (p.$sent ? "flex-end" : "flex-start")};
-  padding: 0 60px;
+  flex-direction: row;
+  justify-content: ${(p) => (p.$sent ? "flex-end" : "flex-start")};
+  padding: 0 20px;
   position: relative;
+  gap: 6px;
 
   &:hover .msg-actions {
     opacity: 1;
@@ -64,10 +65,8 @@ const Ticks = styled.span<{ $read: boolean }>`
 `;
 
 const Actions = styled.div.attrs({ className: "msg-actions" })`
-  position: absolute;
-  top: 4px;
-  right: -40px;
   opacity: 0;
+  margin-top: 4px;
   transition: opacity var(--transition-fast);
 `;
 
