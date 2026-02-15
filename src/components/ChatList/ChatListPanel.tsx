@@ -1,9 +1,10 @@
+import { useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import styled from "styled-components";
-import type {RootState} from "../../store";
+import type { RootState } from "../../store";
 import { selectChat, setSearchQuery } from "../../store/chatSlice";
 import ChatItem from "./ChatItem";
-import { EditOutlined, FilterOutlined, SearchOutlined } from "@ant-design/icons";
+import { EditOutlined, FilterOutlined, SearchOutlined, LockOutlined } from "@ant-design/icons";
 
 const PanelContainer = styled.div`
   width: var(--chat-list-width);
@@ -95,21 +96,66 @@ const SearchInput = styled.input`
   }
 `;
 
+const FilterChips = styled.div`
+  display: flex;
+  gap: 8px;
+  padding: 4px 14px 8px;
+`;
+
+const Chip = styled.button<{ $active?: boolean }>`
+  padding: 4px 14px;
+  border-radius: 16px;
+  border: none;
+  font-size: var(--font-size-sm);
+  font-family: var(--font-family);
+  cursor: pointer;
+  transition: background var(--transition-fast), color var(--transition-fast);
+  background: ${(p) => (p.$active ? "var(--wa-green)" : "var(--bg-search)")};
+  color: ${(p) => (p.$active ? "var(--text-white)" : "var(--text-secondary)")};
+  font-weight: ${(p) => (p.$active ? 600 : 400)};
+
+  &:hover {
+    background: ${(p) => (p.$active ? "var(--wa-green)" : "var(--bg-hover)")};
+  }
+`;
+
 const ChatListScroll = styled.div`
   flex: 1;
   overflow-y: auto;
   overflow-x: hidden;
 `;
 
+const EncryptionFooter = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  padding: 12px 14px;
+  font-size: var(--font-size-xs);
+  color: var(--text-muted);
+  border-top: 1px solid var(--border-light);
+
+  .anticon {
+    font-size: 10px;
+  }
+`;
+
+type FilterType = "all" | "unread" | "groups";
+
 export default function ChatListPanel() {
   const dispatch = useDispatch();
   const { contacts, selectedChatId, searchQuery } = useSelector(
     (s: RootState) => s.chat
   );
+  const [activeFilter, setActiveFilter] = useState<FilterType>("all");
 
-  const filtered = contacts.filter((c) =>
+  let filtered = contacts.filter((c) =>
     c.name.toLowerCase().includes(searchQuery.toLowerCase())
   );
+
+  if (activeFilter === "unread") {
+    filtered = filtered.filter((c) => c.unreadCount > 0);
+  }
 
   return (
     <PanelContainer>
@@ -136,6 +182,11 @@ export default function ChatListPanel() {
           />
         </SearchWrapper>
       </SearchContainer>
+      <FilterChips>
+        <Chip $active={activeFilter === "all"} onClick={() => setActiveFilter("all")}>All</Chip>
+        <Chip $active={activeFilter === "unread"} onClick={() => setActiveFilter("unread")}>Unread</Chip>
+        <Chip $active={activeFilter === "groups"} onClick={() => setActiveFilter("groups")}>Groups</Chip>
+      </FilterChips>
       <ChatListScroll>
         {filtered.map((contact) => (
           <ChatItem
@@ -146,6 +197,10 @@ export default function ChatListPanel() {
           />
         ))}
       </ChatListScroll>
+      <EncryptionFooter>
+        <LockOutlined />
+        Your personal messages are end-to-end encrypted
+      </EncryptionFooter>
     </PanelContainer>
   );
 }

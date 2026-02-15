@@ -8,6 +8,8 @@ interface ChatState {
   selectedChatId: string | null;
   searchQuery: string;
   contacts: Contact[];
+  theme: "light" | "dark";
+  replyToMessageId: string | null;
 }
 
 const initialState: ChatState = {
@@ -15,6 +17,8 @@ const initialState: ChatState = {
   selectedChatId: null,
   searchQuery: "",
   contacts,
+  theme: "light",
+  replyToMessageId: null,
 };
 
 const chatSlice = createSlice({
@@ -62,8 +66,17 @@ const chatSlice = createSlice({
         contact.isDeleted = false;
       }
     },
+    toggleTheme(state) {
+      state.theme = state.theme === "light" ? "dark" : "light";
+    },
+    setReplyTo(state, action: PayloadAction<string | null>) {
+      state.replyToMessageId = action.payload;
+    },
+    clearReplyTo(state) {
+      state.replyToMessageId = null;
+    },
   },
 });
 
-export const { setActiveTab, selectChat, setSearchQuery, sendMessage } = chatSlice.actions;
+export const { setActiveTab, selectChat, setSearchQuery, sendMessage, toggleTheme, setReplyTo, clearReplyTo } = chatSlice.actions;
 export default chatSlice.reducer;

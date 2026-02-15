@@ -1,8 +1,8 @@
 import { useState, useRef, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import styled from "styled-components";
-import type {RootState} from "../../store";
-import { sendMessage } from "../../store/chatSlice";
+import type { RootState } from "../../store";
+import { sendMessage, setReplyTo, clearReplyTo } from "../../store/chatSlice";
 import MessageBubble from "./MessageBubble";
 import {
   SearchOutlined,
@@ -10,8 +10,9 @@ import {
   VideoCameraOutlined,
   MoreOutlined,
   SmileOutlined,
-  PaperClipOutlined,
+  PlusOutlined,
   AudioOutlined,
+  CloseOutlined,
 } from "@ant-design/icons";
 
 const Container = styled.div`
@@ -103,6 +104,92 @@ const Messages = styled.div`
   z-index: 1;
 `;
 
+const DateDivider = styled.div`
+  display: flex;
+  justify-content: center;
+  padding: 8px 0 12px;
+  z-index: 1;
+`;
+
+const DateLabel = styled.span`
+  background: var(--bg-bubble-received);
+  color: var(--text-secondary);
+  font-size: var(--font-size-xs);
+  padding: 5px 12px;
+  border-radius: 8px;
+  font-weight: 500;
+  box-shadow: 0 1px 0.5px rgba(11, 20, 26, 0.08);
+  text-transform: uppercase;
+  letter-spacing: 0.3px;
+`;
+
+const ReplyPreview = styled.div`
+  display: flex;
+  align-items: center;
+  padding: 8px 12px;
+  background: var(--bg-header);
+  border-top: 1px solid var(--border-light);
+  z-index: 2;
+  gap: 8px;
+`;
+
+const ReplyBar = styled.div`
+  flex: 1;
+  display: flex;
+  align-items: stretch;
+  background: var(--bg-input);
+  border-radius: var(--radius-sm);
+  overflow: hidden;
+  min-height: 40px;
+`;
+
+const ReplyColorBar = styled.div`
+  width: 4px;
+  background: var(--wa-green);
+  flex-shrink: 0;
+`;
+
+const ReplyContent = styled.div`
+  padding: 6px 10px;
+  flex: 1;
+  min-width: 0;
+`;
+
+const ReplyName = styled.div`
+  font-size: var(--font-size-xs);
+  font-weight: 600;
+  color: var(--wa-green);
+  margin-bottom: 2px;
+`;
+
+const ReplyText = styled.div`
+  font-size: var(--font-size-sm);
+  color: var(--text-secondary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+`;
+
+const ReplyCloseButton = styled.button`
+  width: 32px;
+  height: 32px;
+  border: none;
+  border-radius: var(--radius-full);
+  background: transparent;
+  color: var(--text-muted);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  flex-shrink: 0;
+  transition: color var(--transition-fast);
+
+  &:hover {
+    color: var(--text-primary);
+  }
+`;
+
 const InputBar = styled.div`
   display: flex;
   align-items: center;
@@ -158,7 +245,7 @@ const TextInput = styled.input`
 
 export default function ChatView() {
   const dispatch = useDispatch();
-  const { contacts, selectedChatId } = useSelector((s: RootState) => s.chat);
+  const { contacts, selectedChatId, replyToMessageId } = useSelector((s: RootState) => s.chat);
   const contact = contacts.find((c) => c.id === selectedChatId);
   const [text, setText] = useState("");
   const messagesEndRef = useRef<HTMLDivElement>(null);
@@ -169,10 +256,15 @@ export default function ChatView() {
 
   if (!contact) return null;
 
+  const replyMessage = replyToMessageId
+    ? contact.messages.find((m) => m.id === replyToMessageId)
+    : null;
+
   const handleSend = () => {
     const trimmed = text.trim();
     if (!trimmed || !selectedChatId) return;
     dispatch(sendMessage({ chatId: selectedChatId, text: trimmed }));
+    dispatch(clearReplyTo());
     setText("");
   };
 
@@ -190,7 +282,7 @@ export default function ChatView() {
         <HeaderAvatar src={contact.avatar} alt={contact.name} />
         <HeaderInfo>
           <HeaderName>{contact.name}</HeaderName>
-          <HeaderStatus>{contact.online ? "online" : "last seen recently"}</HeaderStatus>
+          <HeaderStatus>{contact.online ? "online" : "click here for contact info"}</HeaderStatus>
         </HeaderInfo>
         <HeaderActions>
           <IconButton title="Video call"><VideoCameraOutlined /></IconButton>
@@ -200,20 +292,39 @@ export default function ChatView() {
         </HeaderActions>
       </Header>
       <Messages>
+        <DateDivider>
+          <DateLabel>Today</DateLabel>
+        </DateDivider>
         {contact.messages.map((msg) => (
           <MessageBubble
             key={msg.id}
+            id={msg.id}
             text={msg.text}
             timestamp={msg.timestamp}
             sent={msg.sent}
             read={msg.read}
+            contactName={contact.name}
+            onReply={(id) => dispatch(setReplyTo(id))}
           />
         ))}
         <div ref={messagesEndRef} />
       </Messages>
+      {replyMessage && (
+        <ReplyPreview>
+          <ReplyBar>
+            <ReplyColorBar />
+            <ReplyContent>
+              <ReplyName>{replyMessage.sent ? "You" : contact.name}</ReplyName>
+              <ReplyText>{replyMessage.text}</ReplyText>
+            </ReplyContent>
+          </ReplyBar>
+          <ReplyCloseButton onClick={() => dispatch(clearReplyTo())} title="Cancel reply">
+            <CloseOutlined />
+          </ReplyCloseButton>
+        </ReplyPreview>
+      )}
       <InputBar>
-        <InputIconButton title="Emoji"><SmileOutlined /></InputIconButton>
-        <InputIconButton title="Attach"><PaperClipOutlined /></InputIconButton>
+        <InputIconButton title="Attach"><PlusOutlined /></InputIconButton>
         <TextInputWrapper>
           <TextInput
             placeholder="Type a message"
@@ -222,6 +333,7 @@ export default function ChatView() {
             onKeyDown={handleKeyDown}
           />
         </TextInputWrapper>
+        <InputIconButton title="Emoji"><SmileOutlined /></InputIconButton>
         <InputIconButton title="Voice message"><AudioOutlined /></InputIconButton>
       </InputBar>
     </Container>

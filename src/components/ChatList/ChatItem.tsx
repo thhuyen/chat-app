@@ -32,7 +32,7 @@ const AvatarWrapper = styled.div<{ $online?: boolean }>`
     width: 12px;
     height: 12px;
     background: var(--wa-green);
-    border: 2px solid white;
+    border: 2px solid var(--bg-chat-list);
     border-radius: var(--radius-full);
   }
 `;

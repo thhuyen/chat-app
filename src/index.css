@@ -76,6 +76,53 @@
   --badge-size: 20px;
 }
 
+/* Dark Mode Theme */
+[data-theme="dark"] {
+  /* Primary */
+  --wa-green: #00A884;
+  --wa-green-dark: #005C4B;
+  --wa-green-light: #005C4B;
+  --wa-teal: #00A884;
+
+  /* Backgrounds */
+  --bg-app: #0B141A;
+  --bg-sidebar: #111B21;
+  --bg-chat-list: #111B21;
+  --bg-main: #0B141A;
+  --bg-header: #202C33;
+  --bg-input: #2A3942;
+  --bg-search: #202C33;
+  --bg-hover: #202C33;
+  --bg-active: #2A3942;
+  --bg-bubble-sent: #005C4B;
+  --bg-bubble-received: #202C33;
+  --bg-welcome: #111B21;
+  --bg-sidebar-nav: #111B21;
+  --bg-sidebar-active: #2A3942;
+  --bg-sidebar-hover: #202C33;
+
+  /* Text */
+  --text-primary: #E9EDEF;
+  --text-secondary: #8696A0;
+  --text-muted: #8696A0;
+  --text-green: #00A884;
+  --text-timestamp: #8696A0;
+  --text-unread-timestamp: #00A884;
+  --text-white: #FFFFFF;
+
+  /* Borders */
+  --border-light: #2A3942;
+  --border-sidebar: #2A3942;
+
+  /* Shadows */
+  --shadow-panel: 0 1px 3px rgba(0, 0, 0, 0.3);
+  --shadow-header: 0 1px 2px rgba(0, 0, 0, 0.2);
+
+  /* Badge */
+  --badge-bg: #00A884;
+  --badge-text: #111B21;
+}
+
 * {
   margin: 0;
   padding: 0;
@@ -110,4 +157,12 @@ body {
 }
 ::-webkit-scrollbar-thumb:hover {
   background: rgba(0,0,0,0.3);
+}
+
+/* Dark mode scrollbar */
+[data-theme="dark"] ::-webkit-scrollbar-thumb {
+  background: rgba(255,255,255,0.15);
+}
+[data-theme="dark"] ::-webkit-scrollbar-thumb:hover {
+  background: rgba(255,255,255,0.25);
 }

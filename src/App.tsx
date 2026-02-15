@@ -1,11 +1,25 @@
+import { useEffect } from "react";
 import { store } from "./store";
-import { Provider } from "react-redux";
+import { Provider, useSelector } from "react-redux";
+import type { RootState } from "./store";
 import AppLayout from "./components/AppLayout";
+
+function ThemeProvider({ children }: { children: React.ReactNode }) {
+  const theme = useSelector((s: RootState) => s.chat.theme);
+
+  useEffect(() => {
+    document.documentElement.setAttribute("data-theme", theme);
+  }, [theme]);
+
+  return <>{children}</>;
+}
 
 function App() {
   return (
     <Provider store={store}>
-      <AppLayout />
+      <ThemeProvider>
+        <AppLayout />
+      </ThemeProvider>
     </Provider>
   );
 }

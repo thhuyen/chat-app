@@ -1,7 +1,7 @@
 import { useSelector, useDispatch } from "react-redux";
 import styled from "styled-components";
 import type { RootState } from "../../store";
-import { setActiveTab, type SidebarTab } from "../../store/chatSlice";
+import { setActiveTab, toggleTheme, type SidebarTab } from "../../store/chatSlice";
 import {
   MessageOutlined,
   PhoneOutlined,
@@ -9,6 +9,8 @@ import {
   InboxOutlined,
   StarOutlined,
   SettingOutlined,
+  BulbOutlined,
+  BulbFilled,
 } from "@ant-design/icons";
 
 const SidebarContainer = styled.aside`
@@ -84,6 +86,7 @@ const BottomNav = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
+  gap: 2px;
   padding-bottom: 4px;
 `;
 
@@ -104,6 +107,7 @@ const navItems: NavItem[] = [
 
 export default function Sidebar() {
   const activeTab = useSelector((s: RootState) => s.chat.activeTab);
+  const theme = useSelector((s: RootState) => s.chat.theme);
   const dispatch = useDispatch();
 
   return (
@@ -123,6 +127,12 @@ export default function Sidebar() {
         ))}
       </NavGroup>
       <BottomNav>
+        <NavButton
+          onClick={() => dispatch(toggleTheme())}
+          title={theme === "light" ? "Switch to dark mode" : "Switch to light mode"}
+        >
+          {theme === "light" ? <BulbOutlined /> : <BulbFilled />}
+        </NavButton>
         <NavButton title="Settings">
           <SettingOutlined />
         </NavButton>
@@ -130,3 +140,4 @@ export default function Sidebar() {
     </SidebarContainer>
   );
 }
+
