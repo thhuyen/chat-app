@@ -6,6 +6,7 @@ import { sendMessage, setReplyTo, clearReplyTo, toggleContactInfo } from "../../
 import MessageBubble from "./MessageBubble";
 import PollMessage from "./PollMessage";
 import LinkPreviewMessage from "./LinkPreviewMessage";
+import ImageMessage from "./ImageMessage";
 import {
   SearchOutlined,
   PhoneOutlined,
@@ -427,6 +428,17 @@ export default function ChatView() {
               {/* Link preview message */}
               {msg.type === "link" && msg.link && (
                 <LinkPreviewMessage link={msg.link} timestamp={msg.timestamp} sent={msg.sent} />
+              )}
+
+              {/* Image message */}
+              {msg.type === "image" && msg.image && (
+                <ImageMessage
+                  imageUrl={msg.image.url}
+                  caption={msg.image.caption}
+                  timestamp={msg.timestamp}
+                  sent={msg.sent}
+                  read={msg.read}
+                />
               )}
 
               {/* Regular, deleted, or system message */}

@@ -1,4 +1,4 @@
-export type MessageType = "text" | "deleted" | "system" | "poll" | "link";
+export type MessageType = "text" | "deleted" | "system" | "poll" | "link" | "image";
 
 export interface PollOption {
   text: string;
@@ -18,6 +18,46 @@ export interface LinkData {
   domain: string;
 }
 
+export interface ImageData {
+  url: string;
+  caption?: string;
+}
+
+// Generate placeholder image SVGs
+function generateImageSvg(type: "food" | "sunset" | "stadium"): string {
+  const configs = {
+    food: {
+      gradient: ["#E8913A", "#C2393A"],
+      icon: "🍝",
+      label: "Italian Restaurant",
+    },
+    sunset: {
+      gradient: ["#FF6B35", "#9B2335"],
+      icon: "🌅",
+      label: "Sunset View",
+    },
+    stadium: {
+      gradient: ["#1B5E20", "#388E3C"],
+      icon: "🏟️",
+      label: "Game Night",
+    },
+  };
+  const c = configs[type];
+  const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="660" height="495" viewBox="0 0 660 495">
+    <defs>
+      <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+        <stop offset="0%" style="stop-color:${c.gradient[0]}"/>
+        <stop offset="100%" style="stop-color:${c.gradient[1]}"/>
+      </linearGradient>
+    </defs>
+    <rect width="660" height="495" fill="url(#bg)"/>
+    <text x="330" y="220" text-anchor="middle" font-size="80">${c.icon}</text>
+    <text x="330" y="290" text-anchor="middle" font-family="Arial,sans-serif" font-size="24" font-weight="600" fill="white" opacity="0.9">${c.label}</text>
+    <text x="330" y="320" text-anchor="middle" font-family="Arial,sans-serif" font-size="14" fill="white" opacity="0.5">Sample photo</text>
+  </svg>`;
+  return `data:image/svg+xml,${encodeURIComponent(svg)}`;
+}
+
 export interface Message {
   id: string;
   text: string;
@@ -27,6 +67,7 @@ export interface Message {
   type?: MessageType;
   poll?: PollData;
   link?: LinkData;
+  image?: ImageData;
 }
 
 export interface Contact {
@@ -98,6 +139,7 @@ export const contacts: Contact[] = [
       { id: "1c", text: "Same here! I was thinking we could grab dinner tonight?", timestamp: "14:30", sent: false, read: true },
       { id: "1d", text: "That sounds perfect! Where do you want to go?", timestamp: "14:35", sent: true, read: true },
       { id: "1e", text: "How about that new Italian place downtown? 🍝", timestamp: "15:00", sent: false, read: true },
+      { id: "1e2", text: "", timestamp: "15:02", sent: false, read: true, type: "image" as MessageType, image: { url: generateImageSvg("food"), caption: "Look at this place! We should try it 😍" } },
       { id: "1f", text: "Oh yes! I've been wanting to try it!", timestamp: "15:05", sent: true, read: true },
       { id: "1g", text: "Great! I'll make a reservation for 7pm", timestamp: "15:10", sent: false, read: true },
       { id: "1h", text: "That's good! Can't wait 😊", timestamp: "16:10", sent: true, read: true },
@@ -152,7 +194,9 @@ export const contacts: Contact[] = [
       { id: "3a", text: "Son, did you see the game last night?", timestamp: "18:00", sent: false, read: true },
       { id: "3b", text: "No, I missed it! What happened?", timestamp: "18:10", sent: true, read: true },
       { id: "3c", text: "Johnson scored 3 goals in the first half!", timestamp: "18:15", sent: false, read: true },
+      { id: "3c2", text: "", timestamp: "18:16", sent: false, read: true, type: "image" as MessageType, image: { url: generateImageSvg("stadium") } },
       { id: "3d", text: "Whoa! That's insane!", timestamp: "18:20", sent: true, read: true },
+      { id: "3d2", text: "", timestamp: "18:25", sent: true, read: true, type: "image" as MessageType, image: { url: generateImageSvg("sunset"), caption: "Check out this sunset from my balcony btw" } },
       { id: "3e", text: "I mean he wrecked it! 🤣", timestamp: "19:42", sent: false, read: true },
     ],
   },
