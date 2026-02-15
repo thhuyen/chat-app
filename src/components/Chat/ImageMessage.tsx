@@ -57,6 +57,19 @@ const Caption = styled.div`
   line-height: 1.35;
 `;
 
+const CaptionMeta = styled.span`
+  float: right;
+  font-size: 11px;
+  color: var(--text-muted);
+  margin-left: 8px;
+`;
+
+const CaptionTicks = styled.span<{ $read: boolean }>`
+  font-size: 14px;
+  color: ${(p) => (p.$read ? "var(--wa-teal)" : "var(--text-muted)")};
+  margin-left: 3px;
+`;
+
 interface ImageMessageProps {
   imageUrl: string;
   caption?: string;
@@ -80,14 +93,10 @@ export default function ImageMessage({ imageUrl, caption, timestamp, sent, read 
       {caption && (
         <Caption>
           {caption}
-          <span style={{ float: "right", fontSize: 11, color: "var(--text-muted)", marginLeft: 8 }}>
+          <CaptionMeta>
             {timestamp}
-            {sent && (
-              <span style={{ fontSize: 14, color: read ? "var(--wa-teal)" : "var(--text-muted)", marginLeft: 3 }}>
-                ✓✓
-              </span>
-            )}
-          </span>
+            {sent && <CaptionTicks $read={read}>✓✓</CaptionTicks>}
+          </CaptionMeta>
         </Caption>
       )}
     </ImageBubble>

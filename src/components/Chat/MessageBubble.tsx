@@ -42,6 +42,11 @@ const DeletedText = styled.span`
   gap: 6px;
 `;
 
+const DeletedIcon = styled.span`
+  font-size: 14px;
+  display: inline-flex;
+`;
+
 const Meta = styled.span<{ $sent: boolean }>`
   display: inline-flex;
   align-items: center;
@@ -137,7 +142,7 @@ export default function MessageBubble({
       <Bubble $sent={sent}>
         {type === "deleted" ? (
           <DeletedText>
-            <StopOutlined style={{ fontSize: 14 }} />
+            <DeletedIcon><StopOutlined /></DeletedIcon>
             This message was deleted
           </DeletedText>
         ) : (

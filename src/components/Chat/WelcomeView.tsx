@@ -62,6 +62,11 @@ const Encryption = styled.div`
   margin-top: 40px;
 `;
 
+const LockIcon = styled.span`
+  font-size: 12px;
+  display: inline-flex;
+`;
+
 export default function WelcomeView() {
   return (
     <Container>
@@ -81,7 +86,7 @@ export default function WelcomeView() {
         Use WhatsApp on up to 4 linked devices and 1 phone at the same time.
       </Subtitle>
       <Encryption>
-        <LockOutlined style={{ fontSize: 12 }} />
+        <LockIcon><LockOutlined /></LockIcon>
         Your personal messages are end-to-end encrypted
       </Encryption>
     </Container>

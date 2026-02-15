@@ -89,6 +89,10 @@ const DangerLabel = styled(RowLabel)`
   color: #e74c3c;
 `;
 
+const GreenIcon = styled(RowIcon)`
+  color: var(--wa-teal);
+`;
+
 export default function SettingsAccount() {
   return (
     <Container>
@@ -115,7 +119,7 @@ export default function SettingsAccount() {
       <Divider />
 
       <GreenRow>
-        <RowIcon style={{ color: "var(--wa-teal)" }}><InfoCircleOutlined /></RowIcon>
+        <GreenIcon><InfoCircleOutlined /></GreenIcon>
         <RowContent>
           <GreenLabel>Request account info</GreenLabel>
           <RowDesc>Request a report of your account information</RowDesc>

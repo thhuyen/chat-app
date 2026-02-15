@@ -239,13 +239,13 @@ const InputBar = styled.div`
   border-top: 1px solid var(--border-light);
 `;
 
-const InputIconButton = styled.button`
+const InputIconButton = styled.button<{ $active?: boolean }>`
   width: 36px;
   height: 36px;
   border: none;
   border-radius: var(--radius-sm);
   background: transparent;
-  color: var(--text-secondary);
+  color: ${(p) => (p.$active ? "var(--text-primary)" : "var(--text-secondary)")};
   cursor: pointer;
   display: flex;
   align-items: center;
@@ -501,7 +501,7 @@ export default function ChatView() {
           <InputIconButton
             title="Attach"
             onClick={() => setShowAttachMenu((v) => !v)}
-            style={{ color: showAttachMenu ? "var(--text-primary)" : undefined }}
+            $active={showAttachMenu}
           >
             {showAttachMenu ? <CloseOutlined /> : <PlusOutlined />}
           </InputIconButton>

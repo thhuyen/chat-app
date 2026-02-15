@@ -56,6 +56,11 @@ const OptionBar = styled.div<{ $percent: number; $voted: boolean }>`
   border-radius: 8px;
 `;
 
+const OptionRow = styled.div`
+  display: flex;
+  align-items: center;
+`;
+
 const OptionContent = styled.div`
   display: flex;
   align-items: center;
@@ -145,10 +150,10 @@ export default function PollMessage({ poll, timestamp, sent }: PollMessageProps)
             <Option key={i} $voted={option.voted}>
               <OptionBar $percent={percent} $voted={option.voted} />
               <OptionContent>
-                <div style={{ display: "flex", alignItems: "center" }}>
+                <OptionRow>
                   <RadioDot $voted={option.voted} />
                   <OptionText $voted={option.voted}>{option.text}</OptionText>
-                </div>
+                </OptionRow>
                 <OptionVotes>{option.votes} votes</OptionVotes>
               </OptionContent>
             </Option>
